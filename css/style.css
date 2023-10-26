@@ -38,3 +38,12 @@ li {
   list-style: none;
   padding-left: 0;
 }
+.textTask{
+    color: #5d534e;
+    width: 50%;
+}
+.itemTask{
+    display: flex;
+    padding-top: 15px;
+    list-style:circle !important;
+}
