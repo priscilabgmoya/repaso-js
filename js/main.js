@@ -26,6 +26,7 @@ function addTasks(container){
 function listTask(container){
     const col = document.createElement("div"); 
     col.classList = "col col-lg-6 col-xl-6 col-sm-6 col-md-6"; 
+    col.id = "col-list-task"; 
     col.innerText ="LIST TASK";
     LoadTask(col); 
     container.appendChild(col);
@@ -42,18 +43,47 @@ function add(e){
         localStorage.setItem("list-task", JSON.stringify(listTasks)); 
         e.target.value = "";
         alert("Saved Task!");
-        window.location.reload(); 
+        reloadTask(); 
     }
 }
 function LoadTask(col){
-    let ulpast = document.querySelector("#list-task");
-    if(ulpast){
-        col.removeChild(ulpast); 
-    }
+    removeChildrens(col, "list-task");
     const tasks = JSON.parse(localStorage.getItem("list-task")); 
+    const ul = genericListTask(tasks); 
+    col.appendChild(ul);
+}
+function deleteTask(id){
+    if(confirm("Do you want to delete the selected task?")){
+        let updateTask =  JSON.parse(localStorage.getItem("list-task")); 
+        let update = updateTask.filter(task => task.id !== id); 
+        localStorage.setItem("list-task", JSON.stringify(update)); 
+        reloadTask();
+    }
+}
+function searchTask(term){
+    let col_list_task = document.querySelector("#col-list-task");
+    removeChildrens(col_list_task, "list-task");
+    let updateTask =  JSON.parse(localStorage.getItem("list-task")); 
+    let task = updateTask.filter(task => {
+        task.text.includes(term) }); 
+    if(term == '' || task.length == 0) {
+        const ul = genericListTask(updateTask); 
+      return  col_list_task.appendChild(ul);    
+    }else{
+        const ul = genericListTask(task); 
+       return col_list_task.appendChild(ul);   
+    }
+}
+function removeChildrens(parents, id_children){
+    let children = document.querySelector(`#${id_children}`);
+    if(children){
+        parents.removeChild(children); 
+    }
+}
+function genericListTask(list){
     const ul = document.createElement("ul"); 
     ul.id = "list-task";
-    tasks?.forEach(task => {
+    list?.forEach(task => {
         const li = document.createElement("li");
         li.classList = "itemTask" 
         const button = document.createElement("button"); 
@@ -63,20 +93,17 @@ function LoadTask(col){
         li.appendChild(p); 
         button.classList = "btn btn-danger";
         button.innerText = "Eliminar"
-        button.addEventListener("click" , () => deleteTask(task.id, col));
+        button.addEventListener("click" , () => deleteTask(task.id));
         li.appendChild(button);
         ul.appendChild(li); 
     });
-    col.appendChild(ul);
+    return ul; 
 }
-function deleteTask(id, col){
-    if(confirm("Do you want to delete the selected task?")){
-        let updateTask =  JSON.parse(localStorage.getItem("list-task")); 
-        let update = updateTask.filter(task => task.id !== id); 
-        localStorage.setItem("list-task", JSON.stringify(update)); 
-        LoadTask(col); 
-    }
+function reloadTask(){
+    let col_list_task = document.querySelector("#col-list-task");
+    LoadTask(col_list_task); 
 }
 export {
-    Main
+    Main,
+    searchTask
 }

@@ -1,3 +1,4 @@
+import {searchTask} from './main.js'; 
 function NavBar(header) {
     const nav = document.createElement("nav");
     nav.classList = "navbar navbar-expand-lg p-3";
@@ -37,7 +38,7 @@ function NavBar(header) {
     button.innerText = "Search";
     form.appendChild(button);
 
-    form.addEventListener("submit", searchTask); 
+    form.addEventListener("submit", searchTasks); 
 
     divCollapse.appendChild(form);
     div.appendChild(divCollapse);
@@ -46,9 +47,11 @@ function NavBar(header) {
     header.appendChild(nav);
 }
 
-function searchTask(e) {
+function searchTasks(e) {
     e.preventDefault();
     console.log(e.target[0].value);
+    searchTask(e.target[0].value);
+    e.target[0].value = ""; 
 }
 
 export {
