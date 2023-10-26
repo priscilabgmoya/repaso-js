@@ -1,4 +1,6 @@
 import {generarID} from '../helpers/help.js'; 
+import {removeChildrens, genericListTask} from '../helpers/helpersMain.js'; 
+
 let listTasks = JSON.parse(localStorage.getItem("list-task")) || []; 
 function Main(main) {
     const div = document.createElement("div"); 
@@ -49,7 +51,7 @@ function add(e){
 function LoadTask(col){
     removeChildrens(col, "list-task");
     const tasks = JSON.parse(localStorage.getItem("list-task")); 
-    const ul = genericListTask(tasks); 
+    const ul = genericListTask(tasks,deleteTask); 
     col.appendChild(ul);
 }
 function deleteTask(id){
@@ -67,38 +69,14 @@ function searchTask(term){
     let task = updateTask.filter(task => {
         task.text.includes(term) }); 
     if(term == '' || task.length == 0) {
-        const ul = genericListTask(updateTask); 
+        const ul = genericListTask(updateTask,deleteTask); 
       return  col_list_task.appendChild(ul);    
     }else{
-        const ul = genericListTask(task); 
+        const ul = genericListTask(task,deleteTask); 
        return col_list_task.appendChild(ul);   
     }
 }
-function removeChildrens(parents, id_children){
-    let children = document.querySelector(`#${id_children}`);
-    if(children){
-        parents.removeChild(children); 
-    }
-}
-function genericListTask(list){
-    const ul = document.createElement("ul"); 
-    ul.id = "list-task";
-    list?.forEach(task => {
-        const li = document.createElement("li");
-        li.classList = "itemTask" 
-        const button = document.createElement("button"); 
-        const p = document.createElement("p"); 
-        p.innerText = `${task.text}`; 
-        p.classList= "textTask"
-        li.appendChild(p); 
-        button.classList = "btn btn-danger";
-        button.innerText = "Eliminar"
-        button.addEventListener("click" , () => deleteTask(task.id));
-        li.appendChild(button);
-        ul.appendChild(li); 
-    });
-    return ul; 
-}
+
 function reloadTask(){
     let col_list_task = document.querySelector("#col-list-task");
     LoadTask(col_list_task); 
